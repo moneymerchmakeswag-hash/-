@@ -6,136 +6,68 @@
 <title>MM — Sheets Bot</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Unbounded:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg: #080808;
-  --surface: #111;
-  --border: #222;
-  --accent: #c6f135;
-  --text: #fff;
-  --muted: #555;
-  --radius: 16px;
-}
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { height: 100%; }
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'Space Mono', monospace;
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  overflow: hidden;
-}
-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px 28px;
-  border-bottom: 1px solid var(--border);
-  flex-shrink: 0;
-}
-.logo-area { display: flex; align-items: center; gap: 14px; }
-.logo-svg { width: 42px; height: 42px; }
-.logo-text { font-family: 'Unbounded', sans-serif; font-weight: 900; font-size: 14px; letter-spacing: 0.05em; color: var(--accent); line-height: 1.1; }
-.logo-sub { font-size: 9px; color: var(--muted); letter-spacing: 0.15em; margin-top: 2px; }
-.status-dot { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--muted); letter-spacing: 0.08em; }
-.dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; }
-@keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.3} }
-
-.chat-wrap {
-  flex: 1;
-  overflow-y: auto;
-  padding: 28px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  scrollbar-width: thin;
-  scrollbar-color: var(--border) transparent;
-}
-.chat-wrap::-webkit-scrollbar { width: 4px; }
-.chat-wrap::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-
-.msg { max-width: 680px; display: flex; flex-direction: column; gap: 6px; animation: fadeUp 0.3s ease; }
-@keyframes fadeUp { from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)} }
-.msg.user { align-self: flex-end; align-items: flex-end; }
-.msg.bot { align-self: flex-start; align-items: flex-start; }
-.msg-label { font-size: 10px; letter-spacing: 0.12em; color: var(--muted); padding: 0 4px; }
-.msg-bubble {
-  padding: 14px 18px;
-  border-radius: var(--radius);
-  font-size: 13px;
-  line-height: 1.7;
-  white-space: pre-wrap;
-  word-break: break-word;
-}
-.msg.user .msg-bubble { background: #161616; border: 1px solid var(--border); border-bottom-right-radius: 4px; color: #ccc; }
-.msg.bot .msg-bubble { background: #0f1a00; border: 1px solid #1e2e00; border-bottom-left-radius: 4px; color: var(--accent); }
-.msg-bubble a { color: var(--accent); text-decoration: underline; word-break: break-all; }
-.msg-img { max-width: 240px; border-radius: 10px; border: 1px solid var(--border); margin-top: 4px; }
-
-.typing-dots { display: flex; gap: 5px; align-items: center; padding: 6px 0; }
-.typing-dots span { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); animation: bounce 1.2s infinite; }
+:root{--bg:#080808;--surface:#111;--border:#222;--accent:#c6f135;--text:#fff;--muted:#555;--radius:16px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;}
+body{background:var(--bg);color:var(--text);font-family:'Space Mono',monospace;display:flex;flex-direction:column;height:100vh;overflow:hidden;}
+header{display:flex;align-items:center;justify-content:space-between;padding:16px 28px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.logo-area{display:flex;align-items:center;gap:14px;}
+.logo-text{font-family:'Unbounded',sans-serif;font-weight:900;font-size:14px;letter-spacing:0.05em;color:var(--accent);line-height:1.1;}
+.logo-sub{font-size:9px;color:var(--muted);letter-spacing:0.15em;margin-top:2px;}
+.status-dot{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--muted);letter-spacing:0.08em;}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--accent);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+.chat-wrap{flex:1;overflow-y:auto;padding:28px;display:flex;flex-direction:column;gap:16px;scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
+.chat-wrap::-webkit-scrollbar{width:4px;}
+.chat-wrap::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
+.msg{max-width:680px;display:flex;flex-direction:column;gap:6px;animation:fadeUp 0.3s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.msg.user{align-self:flex-end;align-items:flex-end;}
+.msg.bot{align-self:flex-start;align-items:flex-start;}
+.msg-label{font-size:10px;letter-spacing:0.12em;color:var(--muted);padding:0 4px;}
+.msg-bubble{padding:14px 18px;border-radius:var(--radius);font-size:13px;line-height:1.7;white-space:pre-wrap;word-break:break-word;}
+.msg.user .msg-bubble{background:#161616;border:1px solid var(--border);border-bottom-right-radius:4px;color:#ccc;}
+.msg.bot .msg-bubble{background:#0f1a00;border:1px solid #1e2e00;border-bottom-left-radius:4px;color:var(--accent);}
+.msg-bubble a{color:var(--accent);text-decoration:underline;word-break:break-all;}
+.msg-img{max-width:240px;border-radius:10px;border:1px solid var(--border);margin-top:4px;}
+.typing-dots{display:flex;gap:5px;align-items:center;padding:6px 0;}
+.typing-dots span{width:7px;height:7px;border-radius:50%;background:var(--accent);animation:bounce 1.2s infinite;}
 .typing-dots span:nth-child(2){animation-delay:0.2s}
 .typing-dots span:nth-child(3){animation-delay:0.4s}
-@keyframes bounce { 0%,80%,100%{transform:scale(0.6);opacity:0.4}40%{transform:scale(1);opacity:1} }
-
-.welcome {
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  flex: 1; text-align: center; gap: 16px; padding: 40px; animation: fadeUp 0.5s ease;
-}
-.welcome h2 { font-family: 'Unbounded', sans-serif; font-size: 20px; font-weight: 900; color: var(--accent); }
-.welcome p { font-size: 12px; color: var(--muted); line-height: 1.8; max-width: 380px; }
-.welcome-tags { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-top: 8px; }
-.tag { font-size: 10px; letter-spacing: 0.08em; padding: 5px 12px; border: 1px solid var(--border); border-radius: 100px; color: var(--muted); cursor: pointer; transition: all 0.2s; }
-.tag:hover { border-color: var(--accent); color: var(--accent); }
-
-.input-area { flex-shrink: 0; border-top: 1px solid var(--border); padding: 14px 28px 18px; }
-.input-wrap {
-  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
-  display: flex; flex-direction: column; max-width: 800px; margin: 0 auto;
-  transition: border-color 0.2s;
-}
-.input-wrap:focus-within { border-color: #333; }
-.client-row { display: flex; border-bottom: 1px solid var(--border); }
-.client-input {
-  flex: 1; background: transparent; border: none; outline: none;
-  padding: 9px 14px; font-size: 11px; font-family: 'Space Mono', monospace;
-  color: var(--muted); letter-spacing: 0.06em;
-}
-.client-input::placeholder { color: #2a2a2a; }
-.client-input:not(:last-child) { border-right: 1px solid var(--border); }
-textarea#mainInput {
-  background: transparent; border: none; outline: none;
-  padding: 12px 14px 8px; font-size: 13px; font-family: 'Space Mono', monospace;
-  color: var(--text); line-height: 1.6; resize: none; min-height: 64px; max-height: 160px; width: 100%;
-}
-textarea#mainInput::placeholder { color: #2a2a2a; }
-.input-bottom { display: flex; align-items: center; justify-content: space-between; padding: 6px 10px; }
-.attach-btn {
-  background: none; border: 1px solid var(--border); border-radius: 8px;
-  color: var(--muted); font-size: 10px; font-family: 'Space Mono', monospace;
-  padding: 5px 10px; cursor: pointer; letter-spacing: 0.06em; transition: all 0.2s;
-}
-.attach-btn:hover { border-color: #444; color: #888; }
-.send-btn {
-  background: var(--accent); border: none; border-radius: 10px; color: #000;
-  font-size: 11px; font-family: 'Unbounded', sans-serif; font-weight: 700;
-  padding: 8px 18px; cursor: pointer; letter-spacing: 0.06em; transition: all 0.15s;
-}
-.send-btn:hover { background: #d4ff4a; transform: scale(1.02); }
-.send-btn:active { transform: scale(0.98); }
-.send-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
-.file-preview { display: flex; gap: 8px; flex-wrap: wrap; padding: 6px 12px 0; }
-.file-chip { display: flex; align-items: center; gap: 6px; background: #1a1a1a; border: 1px solid var(--border); border-radius: 8px; padding: 3px 8px; font-size: 10px; color: var(--muted); }
-.file-chip .rx { cursor: pointer; color: #444; }
-.file-chip .rx:hover { color: #888; }
-#fileInput { display: none; }
+@keyframes bounce{0%,80%,100%{transform:scale(0.6);opacity:0.4}40%{transform:scale(1);opacity:1}}
+.welcome{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;text-align:center;gap:16px;padding:40px;animation:fadeUp 0.5s ease;}
+.welcome h2{font-family:'Unbounded',sans-serif;font-size:20px;font-weight:900;color:var(--accent);}
+.welcome p{font-size:12px;color:var(--muted);line-height:1.8;max-width:380px;}
+.welcome-tags{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:8px;}
+.tag{font-size:10px;letter-spacing:0.08em;padding:5px 12px;border:1px solid var(--border);border-radius:100px;color:var(--muted);cursor:pointer;transition:all 0.2s;}
+.tag:hover{border-color:var(--accent);color:var(--accent);}
+.input-area{flex-shrink:0;border-top:1px solid var(--border);padding:14px 28px 18px;}
+.input-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);display:flex;flex-direction:column;max-width:800px;margin:0 auto;transition:border-color 0.2s;}
+.input-wrap:focus-within{border-color:#333;}
+.client-row{display:flex;border-bottom:1px solid var(--border);}
+.client-input{flex:1;background:transparent;border:none;outline:none;padding:9px 14px;font-size:11px;font-family:'Space Mono',monospace;color:var(--muted);letter-spacing:0.06em;}
+.client-input::placeholder{color:#2a2a2a;}
+.client-input:not(:last-child){border-right:1px solid var(--border);}
+textarea#mainInput{background:transparent;border:none;outline:none;padding:12px 14px 8px;font-size:13px;font-family:'Space Mono',monospace;color:var(--text);line-height:1.6;resize:none;min-height:64px;max-height:160px;width:100%;}
+textarea#mainInput::placeholder{color:#2a2a2a;}
+.input-bottom{display:flex;align-items:center;justify-content:space-between;padding:6px 10px;}
+.attach-btn{background:none;border:1px solid var(--border);border-radius:8px;color:var(--muted);font-size:10px;font-family:'Space Mono',monospace;padding:5px 10px;cursor:pointer;letter-spacing:0.06em;transition:all 0.2s;}
+.attach-btn:hover{border-color:#444;color:#888;}
+.send-btn{background:var(--accent);border:none;border-radius:10px;color:#000;font-size:11px;font-family:'Unbounded',sans-serif;font-weight:700;padding:8px 18px;cursor:pointer;letter-spacing:0.06em;transition:all 0.15s;}
+.send-btn:hover{background:#d4ff4a;transform:scale(1.02);}
+.send-btn:active{transform:scale(0.98);}
+.send-btn:disabled{opacity:0.4;cursor:not-allowed;transform:none;}
+.file-preview{display:flex;gap:8px;flex-wrap:wrap;padding:6px 12px 0;}
+.file-chip{display:flex;align-items:center;gap:6px;background:#1a1a1a;border:1px solid var(--border);border-radius:8px;padding:3px 8px;font-size:10px;color:var(--muted);}
+.file-chip .rx{cursor:pointer;color:#444;}
+.file-chip .rx:hover{color:#888;}
+#fileInput{display:none;}
 </style>
 </head>
 <body>
 <header>
   <div class="logo-area">
-    <svg class="logo-svg" viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width="42" height="42" viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg">
       <ellipse cx="100" cy="70" rx="92" ry="62" stroke="#c6f135" stroke-width="9" fill="none"/>
       <text x="100" y="100" text-anchor="middle" font-family="Georgia,serif" font-size="72" font-weight="900" fill="#c6f135">mm</text>
     </svg>
@@ -157,7 +89,7 @@ textarea#mainInput::placeholder { color: #2a2a2a; }
     <p>Кидай данные о клиенте в любом виде — текст, скрины, что угодно. Бот разберёт и создаст таблицу в Google Drive.</p>
     <div class="welcome-tags">
       <div class="tag" onclick="quickFill('Набор со свечой, коробка крафт 100х100х200мм, 3200 руб/50шт, срок 7 рд')">→ пример: набор со свечой</div>
-      <div class="tag" onclick="quickFill('Подарочный набор: деревянный ящик 30х20х10, тишью 3 листа, лента атлас, 5500 руб/50шт, срок 10 рд')">→ пример: набор с едой</div>
+      <div class="tag" onclick="quickFill('Набор: деревянный ящик 30х20х10, тишью 3 листа, лента атлас, 5500 руб/50шт, срок 10 рд')">→ пример: набор с едой</div>
     </div>
   </div>
 </div>
@@ -165,8 +97,8 @@ textarea#mainInput::placeholder { color: #2a2a2a; }
 <div class="input-area">
   <div class="input-wrap">
     <div class="client-row">
-      <input class="client-input" id="clientName" type="text" placeholder="ИМЯ КЛИЕНТА" />
-      <input class="client-input" id="setName" type="text" placeholder="НАЗВАНИЕ НАБОРА" />
+      <input class="client-input" id="clientName" type="text" placeholder="ИМЯ КЛИЕНТА"/>
+      <input class="client-input" id="setName" type="text" placeholder="НАЗВАНИЕ НАБОРА"/>
     </div>
     <div class="file-preview" id="filePreview"></div>
     <textarea id="mainInput" placeholder="Кидай данные о компонентах в любом виде..." rows="3"></textarea>
@@ -179,6 +111,8 @@ textarea#mainInput::placeholder { color: #2a2a2a; }
 </div>
 
 <script>
+const GEMINI_KEY="AIzaSyCPgVHVTHCgi-iGu3n6fRRHYrQObeBk3dM";
+const GEMINI_URL=`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`;
 const SA_EMAIL="sheets-bot@mm-sheets-493711.iam.gserviceaccount.com";
 const SA_KEY=`-----BEGIN PRIVATE KEY-----
 MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDWj7OOqYYGpd51
@@ -209,7 +143,6 @@ eNdwkFDHLQhbN1X23lV5J+4D/VzZElgnmUcoulmzx2x0IfLhPaz/3t3jhwMc6RaE
 +wB9mm9KAKqPPgRYRRZ/ibam
 -----END PRIVATE KEY-----`;
 const FOLDER_ID="1ZU_RTGb8iCg86318JkCxdaHfZay-MaKz";
-const TOKEN_URI="https://oauth2.googleapis.com/token";
 
 let attachedFiles=[];
 
@@ -229,7 +162,6 @@ function renderPreviews(){
     `<div class="file-chip">${f.type.startsWith('image/')?'🖼':'📄'} ${f.name} <span class="rx" onclick="removeFile(${i})">×</span></div>`
   ).join('');
 }
-
 function removeFile(i){attachedFiles.splice(i,1);renderPreviews();}
 
 function addMsg(role,content,isHTML=false){
@@ -240,7 +172,7 @@ function addMsg(role,content,isHTML=false){
   const bubble=document.createElement('div');bubble.className='msg-bubble';
   if(isHTML)bubble.innerHTML=content;else bubble.textContent=content;
   div.appendChild(label);div.appendChild(bubble);wrap.appendChild(div);
-  wrap.scrollTop=wrap.scrollHeight;return bubble;
+  wrap.scrollTop=wrap.scrollHeight;
 }
 
 function addTyping(){
@@ -256,36 +188,47 @@ async function getToken(){
   const enc=s=>btoa(unescape(encodeURIComponent(s))).replace(/=/g,'').replace(/\+/g,'-').replace(/\//g,'_');
   const header=enc(JSON.stringify({alg:'RS256',typ:'JWT'}));
   const now=Math.floor(Date.now()/1000);
-  const claim=enc(JSON.stringify({iss:SA_EMAIL,scope:'https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/spreadsheets',aud:TOKEN_URI,exp:now+3600,iat:now}));
+  const claim=enc(JSON.stringify({
+    iss:SA_EMAIL,
+    scope:'https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/spreadsheets',
+    aud:'https://oauth2.googleapis.com/token',exp:now+3600,iat:now
+  }));
   const pem=SA_KEY.replace(/-----BEGIN PRIVATE KEY-----|-----END PRIVATE KEY-----|\n/g,'');
   const der=Uint8Array.from(atob(pem),c=>c.charCodeAt(0));
   const key=await crypto.subtle.importKey('pkcs8',der,{name:'RSASSA-PKCS1-v1_5',hash:'SHA-256'},false,['sign']);
   const sig=await crypto.subtle.sign('RSASSA-PKCS1-v1_5',key,new TextEncoder().encode(header+'.'+claim));
   const sigB64=btoa(String.fromCharCode(...new Uint8Array(sig))).replace(/=/g,'').replace(/\+/g,'-').replace(/\//g,'_');
   const jwt=`${header}.${claim}.${sigB64}`;
-  const r=await fetch(TOKEN_URI,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:`grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Ajwt-bearer&assertion=${jwt}`});
+  const r=await fetch('https://oauth2.googleapis.com/token',{
+    method:'POST',
+    headers:{'Content-Type':'application/x-www-form-urlencoded'},
+    body:`grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Ajwt-bearer&assertion=${jwt}`
+  });
   const d=await r.json();
   if(!d.access_token)throw new Error('Нет токена: '+JSON.stringify(d));
   return d.access_token;
 }
 
-async function parseWithClaude(text,images){
-  const content=[];
+async function parseWithGemini(text,images){
+  const parts=[];
   images.filter(f=>f.type.startsWith('image/')).forEach(img=>{
-    content.push({type:'image',source:{type:'base64',media_type:img.type,data:img.data.split(',')[1]}});
+    parts.push({inlineData:{mimeType:img.type,data:img.data.split(',')[1]}});
   });
-  content.push({type:'text',text:`Из данных ниже извлеки компоненты подарочного набора и верни ТОЛЬКО JSON без пояснений и без markdown:
-{"components":[{"name":"название","desc":"спецификация","type":"Себес РФ","signal":число_или_null,"cost_per_unit":число_или_null,"deadline_signal":"7 р.д.","deadline_50":"10 р.д.","comment":"","supplier":""}]}
+  parts.push({text:`Из данных ниже извлеки компоненты подарочного набора и верни ТОЛЬКО JSON без пояснений и без markdown-блоков:
+{"components":[{"name":"название компонента","desc":"полная спецификация","type":"Себес РФ","signal":число_или_null,"cost_per_unit":число_или_null,"deadline_signal":"7 р.д.","deadline_50":"10 р.д.","comment":"","supplier":""}]}
 
 Данные: ${text}`});
-  const r=await fetch('https://api.anthropic.com/v1/messages',{
+
+  const r=await fetch(GEMINI_URL,{
     method:'POST',
     headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content}]})
+    body:JSON.stringify({contents:[{parts}]})
   });
   const d=await r.json();
-  const raw=d.content?.map(c=>c.text||'').join('');
-  return JSON.parse(raw.replace(/```json|```/g,'').trim());
+  if(d.error)throw new Error(d.error.message);
+  const raw=d.candidates?.[0]?.content?.parts?.[0]?.text||'';
+  const clean=raw.replace(/```json|```/g,'').trim();
+  return JSON.parse(clean);
 }
 
 async function createSheet(clientName,setName,comps){
@@ -300,18 +243,21 @@ async function createSheet(clientName,setName,comps){
   ];
   const date=new Date().toLocaleDateString('ru-RU');
   const r1=await fetch('https://sheets.googleapis.com/v4/spreadsheets',{
-    method:'POST',headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},
+    method:'POST',
+    headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},
     body:JSON.stringify({properties:{title:`Спецификация_${clientName}_${date}`},sheets:[{properties:{title:'Спецификация'}}]})
   });
   const ss=await r1.json();
   if(!ss.spreadsheetId)throw new Error(JSON.stringify(ss));
   const id=ss.spreadsheetId;
   await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${id}/values/Спецификация!A1?valueInputOption=USER_ENTERED`,{
-    method:'PUT',headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},
+    method:'PUT',
+    headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},
     body:JSON.stringify({values:rows})
   });
   await fetch(`https://www.googleapis.com/drive/v3/files/${id}?addParents=${FOLDER_ID}&removeParents=root&fields=id`,{
-    method:'PATCH',headers:{'Authorization':'Bearer '+token}
+    method:'PATCH',
+    headers:{'Authorization':'Bearer '+token}
   });
   return `https://docs.google.com/spreadsheets/d/${id}`;
 }
@@ -335,7 +281,7 @@ async function handleSend(){
   const files=[...attachedFiles];attachedFiles=[];renderPreviews();
   addTyping();
   try{
-    const parsed=await parseWithClaude(`Клиент: ${clientName}\nНабор: ${setName}\n${text}`,files);
+    const parsed=await parseWithGemini(`Клиент: ${clientName}\nНабор: ${setName}\n${text}`,files);
     removeTyping();
     const comps=parsed.components||[];
     if(comps.length===0)throw new Error('Не удалось распознать компоненты');
