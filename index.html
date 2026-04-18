@@ -112,7 +112,7 @@ textarea#mainInput::placeholder{color:#2a2a2a;}
 
 <script>
 const PROXY="https://misty-bread-884d.moneymerchmakeswag.workers.dev";
-const ANTHROPIC_KEY="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";
+const ANTHROPIC_KEY="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";
 const SA_EMAIL="sheets-bot@mm-sheets-493711.iam.gserviceaccount.com";
 const SA_KEY=`-----BEGIN PRIVATE KEY-----
 MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDWj7OOqYYGpd51
@@ -244,23 +244,16 @@ async function createSheet(clientName,setName,comps){
     ['','Итого:','','','','','','','','','','','','','']
   ];
   const date=new Date().toLocaleDateString('ru-RU');
-  const r1=await fetch('https://sheets.googleapis.com/v4/spreadsheets',{
-    method:'POST',
-    headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},
-    body:JSON.stringify({properties:{title:`Спецификация_${clientName}_${date}`},sheets:[{properties:{title:'Спецификация'}}]})
-  });
+  const gFetch=async(url,method,body)=>fetch(
+    `${PROXY}?target=sheets&url=${encodeURIComponent(url)}&method=${method}`,
+    {method:'POST',headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},body:body?JSON.stringify(body):null}
+  );
+  const r1=await gFetch('https://sheets.googleapis.com/v4/spreadsheets','POST',{properties:{title:`Спецификация_${clientName}_${date}`},sheets:[{properties:{title:'Спецификация'}}]});
   const ss=await r1.json();
   if(!ss.spreadsheetId)throw new Error(JSON.stringify(ss));
   const id=ss.spreadsheetId;
-  await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${id}/values/Спецификация!A1?valueInputOption=USER_ENTERED`,{
-    method:'PUT',
-    headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},
-    body:JSON.stringify({values:rows})
-  });
-  await fetch(`https://www.googleapis.com/drive/v3/files/${id}?addParents=${FOLDER_ID}&removeParents=root&fields=id`,{
-    method:'PATCH',
-    headers:{'Authorization':'Bearer '+token}
-  });
+  await gFetch(`https://sheets.googleapis.com/v4/spreadsheets/${id}/values/Спецификация!A1?valueInputOption=USER_ENTERED`,'PUT',{values:rows});
+  await gFetch(`https://www.googleapis.com/drive/v3/files/${id}?addParents=${FOLDER_ID}&removeParents=root&fields=id`,'PATCH',null);
   return `https://docs.google.com/spreadsheets/d/${id}`;
 }
 
