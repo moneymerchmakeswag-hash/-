@@ -111,8 +111,8 @@ textarea#mainInput::placeholder{color:#2a2a2a;}
 </div>
 
 <script>
-const GEMINI_KEY="AIzaSyCPgVHVTHCgi-iGu3n6fRRHYrQObeBk3dM";
-const GEMINI_URL=`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`;
+const PROXY="https://misty-bread-884d.moneymerchmakeswag.workers.dev";
+const ANTHROPIC_KEY="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";
 const SA_EMAIL="sheets-bot@mm-sheets-493711.iam.gserviceaccount.com";
 const SA_KEY=`-----BEGIN PRIVATE KEY-----
 MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDWj7OOqYYGpd51
@@ -184,7 +184,7 @@ function addTyping(){
 }
 function removeTyping(){const t=document.getElementById('typing');if(t)t.remove();}
 
-async function getToken(){
+async function getGoogleToken(){
   const enc=s=>btoa(unescape(encodeURIComponent(s))).replace(/=/g,'').replace(/\+/g,'-').replace(/\//g,'_');
   const header=enc(JSON.stringify({alg:'RS256',typ:'JWT'}));
   const now=Math.floor(Date.now()/1000);
@@ -199,7 +199,7 @@ async function getToken(){
   const sig=await crypto.subtle.sign('RSASSA-PKCS1-v1_5',key,new TextEncoder().encode(header+'.'+claim));
   const sigB64=btoa(String.fromCharCode(...new Uint8Array(sig))).replace(/=/g,'').replace(/\+/g,'-').replace(/\//g,'_');
   const jwt=`${header}.${claim}.${sigB64}`;
-  const r=await fetch('https://oauth2.googleapis.com/token',{
+  const r=await fetch(`${PROXY}?target=token`,{
     method:'POST',
     headers:{'Content-Type':'application/x-www-form-urlencoded'},
     body:`grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Ajwt-bearer&assertion=${jwt}`
@@ -209,30 +209,32 @@ async function getToken(){
   return d.access_token;
 }
 
-async function parseWithGemini(text,images){
-  const parts=[];
+async function parseWithClaude(text,images){
+  const content=[];
   images.filter(f=>f.type.startsWith('image/')).forEach(img=>{
-    parts.push({inlineData:{mimeType:img.type,data:img.data.split(',')[1]}});
+    content.push({type:'image',source:{type:'base64',media_type:img.type,data:img.data.split(',')[1]}});
   });
-  parts.push({text:`Из данных ниже извлеки компоненты подарочного набора и верни ТОЛЬКО JSON без пояснений и без markdown-блоков:
-{"components":[{"name":"название компонента","desc":"полная спецификация","type":"Себес РФ","signal":число_или_null,"cost_per_unit":число_или_null,"deadline_signal":"7 р.д.","deadline_50":"10 р.д.","comment":"","supplier":""}]}
+  content.push({type:'text',text:`Из данных ниже извлеки компоненты подарочного набора и верни ТОЛЬКО JSON без пояснений и без markdown:
+{"components":[{"name":"название","desc":"спецификация","type":"Себес РФ","signal":число_или_null,"cost_per_unit":число_или_null,"deadline_signal":"7 р.д.","deadline_50":"10 р.д.","comment":"","supplier":""}]}
 
 Данные: ${text}`});
-
-  const r=await fetch(GEMINI_URL,{
+  const r=await fetch(`${PROXY}?target=claude`,{
     method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({contents:[{parts}]})
+    headers:{
+      'Content-Type':'application/json',
+      'x-api-key':ANTHROPIC_KEY,
+      'anthropic-version':'2023-06-01'
+    },
+    body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:1000,messages:[{role:'user',content}]})
   });
   const d=await r.json();
   if(d.error)throw new Error(d.error.message);
-  const raw=d.candidates?.[0]?.content?.parts?.[0]?.text||'';
-  const clean=raw.replace(/```json|```/g,'').trim();
-  return JSON.parse(clean);
+  const raw=d.content?.map(c=>c.text||'').join('');
+  return JSON.parse(raw.replace(/```json|```/g,'').trim());
 }
 
 async function createSheet(clientName,setName,comps){
-  const token=await getToken();
+  const token=await getGoogleToken();
   const total=comps.reduce((s,c)=>s+(parseFloat(c.cost_per_unit)||0),0);
   const rows=[
     ['','','','','','','','','Стоимость в руб/шт за ед (себес)','','','Сроки (обязательно в рабочих днях)','','',''],
@@ -281,7 +283,7 @@ async function handleSend(){
   const files=[...attachedFiles];attachedFiles=[];renderPreviews();
   addTyping();
   try{
-    const parsed=await parseWithGemini(`Клиент: ${clientName}\nНабор: ${setName}\n${text}`,files);
+    const parsed=await parseWithClaude(`Клиент: ${clientName}\nНабор: ${setName}\n${text}`,files);
     removeTyping();
     const comps=parsed.components||[];
     if(comps.length===0)throw new Error('Не удалось распознать компоненты');
